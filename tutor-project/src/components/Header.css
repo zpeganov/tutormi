@@ -10,6 +10,7 @@
     right: 0;
     z-index: 1000;
     height: 80px;
+   
 
 }
 
@@ -21,17 +22,22 @@
     justify-content: center;
 
 }
-.left-section {
+.middle-section {
     padding-left: 20px;
 }
 .right-section {
+    display: flex;
+    justify-content: space-around;
     padding-right: 20px;
 }
 
-.middle-section {
+.left-section {
     display: flex;
+    font-family: 'Secular One', sans-serif;
     flex-grow: 1;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
+    padding-left: 20px;
     font-size: 24px;
+    cursor: pointer;
 }
