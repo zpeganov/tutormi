@@ -1,6 +1,6 @@
 import './HomePage.css';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../components/Header';
+import { HomeHeader } from '../components/HomeHeader';
 export function HomePage() {
     const navigate = useNavigate();
 
@@ -10,13 +10,13 @@ export function HomePage() {
 
     return (
         <>
-            <Header />
+            <HomeHeader />
             <div className='main-container'>
                 <div className='landing-title-container'>
                     <div className='main-title'>
-                        Everything you need to be the
+                        Everything You Need to Be the
                         <br />
-                        BEST tutor, right here.
+                        Best Tutor, <span>Right Here.</span>
                     </div>
                 </div>
 
@@ -29,6 +29,11 @@ export function HomePage() {
                         <button>Tutor</button>
                     </div>
                 </div>
+            </div>
+            <div className="footer-links">
+                <span>Survey Students after Tutoring Sessions</span> &middot;
+                <span>Upload and View Lesson Plans</span> &middot;
+                <span>Send and See Announcements</span>
             </div>
         </>
     );
