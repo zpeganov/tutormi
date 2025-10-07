@@ -7,6 +7,17 @@ export function StudentLogin() {
     const handleClick = () => {
         navigate('/student-signup');
     }
+    const handleLogin = (e) => {
+        e.preventDefault();
+        event.preventDefault();
+        axios.post('http://localhost:3000/api/auth/student-signup', {name, email, password})
+        .then(result =>{
+            navigate('/student-login');
+        }).catch(err => {
+            console.error(err);
+        });
+
+    }
     return(
         <>
         <Header />
@@ -29,7 +40,8 @@ export function StudentLogin() {
                     </button>
                 </div>
                 <div className="button-container">
-                    <button type="submit" className="submit-button">Login</button>
+                    <button type="submit" className="submit-button"
+                    onClick = {handleLogin}>Login</button>
                 </div>
             </form>
         </div>

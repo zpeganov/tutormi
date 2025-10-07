@@ -28,7 +28,7 @@ export function StudentSignup() {
         event.preventDefault();
         axios.post('http://localhost:3000/api/auth/student-signup', {name, email, password})
         .then(result =>{
-            console.log(result);
+            navigate('/student-login');
         }).catch(err => {
             console.error(err);
         });

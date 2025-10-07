@@ -5,14 +5,14 @@
     justify-content: space-between;
     color: #2D3142;
     background-color: white;
-    box-shadow: 10px 10px 5px rgba(0, 0, 0, .15);
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.15);
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 999;
     height: 80px;
-    font-family: 'Secular One', sans-serif;
+
     
 
 }
@@ -90,6 +90,7 @@
     font-family: 'Secular One', sans-serif;
     cursor: pointer;
     transition: opacity 0.3s ease;
+    
 }
 
 .left-section:hover {
