@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import './StudentLogin.css';
@@ -7,12 +8,10 @@ export function StudentLogin() {
     const handleClick = () => {
         navigate('/student-signup');
     }
-    const handleLogin = (e) => {
-        e.preventDefault();
-        event.preventDefault();
-        axios.post('http://localhost:3000/api/auth/student-signup', {name, email, password})
+    const handleLogin = () => {
+        axios.post('http://localhost:3000/api/auth/student-login', {email, password})
         .then(result =>{
-            navigate('/student-login');
+            navigate('/');
         }).catch(err => {
             console.error(err);
         });
