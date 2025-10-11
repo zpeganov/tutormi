@@ -3,6 +3,7 @@ import './App.css'
 import { HomePage } from './pages/HomePage'
 import { StudentLogin } from './pages/StudentLogin'
 import { StudentSignup } from './pages/StudentSignup'
+import { StudentDashboard } from './pages/StudentDashboard'
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
                 <Route path='/student-login' element={<StudentLogin />} />
                 <Route path='/student-signup' element={<StudentSignup />} />
                 <Route path='/student-login' element={<StudentLogin />} />
+                <Route path='/student-dashboard' element={<StudentDashboard />} />
               </Routes>
             </BrowserRouter>
           </>

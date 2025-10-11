@@ -4,8 +4,7 @@
     align-items: center;
     justify-content: space-between;
     color: #2D3142;
-    background-color: white;
-    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.15);
+    background-color: white; 
     position: fixed;
     top: 0;
     left: 0;
