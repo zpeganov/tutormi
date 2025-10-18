@@ -1,14 +1,14 @@
 import { Outlet } from "react-router-dom";
-import { SideNav } from "../components/SideNav";
+import { TutorSideNav } from "../components/TutorSideNav";
 import { Header } from "../components/Header";
-import './StudentDashboard.css';
+import './TutorDashboard.css';
 
 export function TutorDashboard() {
     return (
         <>
         <Header />
-        <div className="student-dashboard">
-            <SideNav />
+        <div className="tutor-dashboard">
+            <TutorSideNav />
             <main className="dashboard-content">
                 <Outlet />
             </main>

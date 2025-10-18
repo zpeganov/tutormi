@@ -4,9 +4,11 @@ import { HomePage } from './pages/HomePage'
 import { StudentLogin } from './pages/StudentLogin'
 import { TutorLogin } from './pages/TutorLogin'
 import { StudentSignup } from './pages/StudentSignup'
+import { TutorDashboard } from './pages/TutorDashboard'
 import { TutorSignup } from './pages/TutorSignup'
 import { StudentDashboard } from './pages/StudentDashboard'
 import { ProfilePage } from './pages/ProfilePage';
+import { TutorProfilePage } from './pages/TutorProfilePage';
 
 function App() {
 
@@ -33,6 +35,10 @@ function App() {
 
           <Route path='/student-dashboard' element={<StudentDashboard />}>
             <Route path="profile" element={<ProfilePage />} />
+            {/* Other dashboard routes can be added here */}
+          </Route>
+          <Route path='/tutor-dashboard' element={<TutorDashboard />}>
+            <Route path="profile" element={<TutorProfilePage />} />
             {/* Other dashboard routes can be added here */}
           </Route>
         </Routes>
