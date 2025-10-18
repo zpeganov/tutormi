@@ -1,0 +1,28 @@
+.profile-page {
+    padding: 20px;
+}
+
+.profile-page h1 {
+    color: #2D3142;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.profile-details {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.detail-item strong {
+    width: 120px;
+    color: #4F5D75;
+}

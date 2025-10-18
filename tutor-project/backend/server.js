@@ -2,7 +2,8 @@ import express from 'express';
 import StudentModel from './models/Student.js';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import authRoute from './routes/StudentRoutes.js';
+import studentAuthRoute from './routes/StudentRoutes.js';
+import tutorAuthRoute from './routes/TutorRoutes.js';
 import connectDB from './config/db.js';
 import cookieParser from 'cookie-parser';
 dotenv.config();
@@ -17,7 +18,8 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
-app.use('/api/auth', authRoute);
+app.use('/api/auth', studentAuthRoute);
+app.use('/api/auth', tutorAuthRoute);
 
 
 app.listen(PORT, async () => {

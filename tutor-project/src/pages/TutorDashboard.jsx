@@ -3,7 +3,7 @@ import { SideNav } from "../components/SideNav";
 import { Header } from "../components/Header";
 import './StudentDashboard.css';
 
-export function StudentDashboard() {
+export function TutorDashboard() {
     return (
         <>
         <Header />

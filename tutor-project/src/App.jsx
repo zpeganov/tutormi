@@ -1,9 +1,12 @@
-import { BrowserRouter, Route, Routes } from 'react-router'
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css'
 import { HomePage } from './pages/HomePage'
 import { StudentLogin } from './pages/StudentLogin'
+import { TutorLogin } from './pages/TutorLogin'
 import { StudentSignup } from './pages/StudentSignup'
+import { TutorSignup } from './pages/TutorSignup'
 import { StudentDashboard } from './pages/StudentDashboard'
+import { ProfilePage } from './pages/ProfilePage';
 
 function App() {
 
@@ -21,16 +24,21 @@ function App() {
 
       </head>
       <BrowserRouter>
-              <Routes>
-                <Route index element={<HomePage />} />
-                <Route path='/student-login' element={<StudentLogin />} />
-                <Route path='/student-signup' element={<StudentSignup />} />
-                <Route path='/student-login' element={<StudentLogin />} />
-                <Route path='/student-dashboard' element={<StudentDashboard />} />
-              </Routes>
-            </BrowserRouter>
-          </>
-          );
+        <Routes>
+          <Route index element={<HomePage />} />
+          <Route path='/student-login' element={<StudentLogin />} />
+          <Route path='/tutor-login' element={<TutorLogin />} />
+          <Route path='/student-signup' element={<StudentSignup />} />
+          <Route path='/tutor-signup' element={<TutorSignup />} />
+
+          <Route path='/student-dashboard' element={<StudentDashboard />}>
+            <Route path="profile" element={<ProfilePage />} />
+            {/* Other dashboard routes can be added here */}
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </>
+  );
 }
 
-          export default App
+export default App

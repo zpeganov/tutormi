@@ -8,6 +8,10 @@ export function HomePage() {
         navigate('/student-login');
     };
 
+    const handleTutorClick = () => {
+        navigate('/tutor-login');
+    }
+
     return (
         <>
             <HomeHeader />
@@ -26,7 +30,9 @@ export function HomePage() {
                         <button
                             onClick={handleStudentClick}
                         >Student</button>
-                        <button>Tutor</button>
+                        <button
+                            onClick={handleTutorClick}
+                        >Tutor</button>
                     </div>
                 </div>
             </div>
