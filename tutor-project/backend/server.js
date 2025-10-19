@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import studentAuthRoute from './routes/StudentRoutes.js';
 import tutorAuthRoute from './routes/TutorRoutes.js';
+import lessonPlanRoute from './routes/LessonPlanRoutes.js';
 import connectDB from './config/db.js';
 import cookieParser from 'cookie-parser';
 dotenv.config();
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use('/api/auth', studentAuthRoute);
 app.use('/api/auth', tutorAuthRoute);
+app.use('/api/lesson-plans', lessonPlanRoute);
 
 
 app.listen(PORT, async () => {
