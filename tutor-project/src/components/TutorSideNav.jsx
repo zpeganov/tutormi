@@ -8,7 +8,7 @@ export function TutorSideNav() {
       <ul>
         <li><Link to="profile">Profile</Link></li>
         <li><a href="#">My Students</a></li>
-        <li><a href="#">My Lesson Plans</a></li>
+        <li><Link to="lesson-plans">Lesson Plans</Link></li>
       </ul>
     </nav>
   );

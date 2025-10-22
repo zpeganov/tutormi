@@ -40,9 +40,10 @@ export const protect = async (req, res, next) => {
 export const protectTutor = async (req, res, next) => {
     let token;
 
-    if (req.cookies && req.cookies.token) {
+    // Look for the unique 'tutor_token' cookie
+    if (req.cookies && req.cookies.tutor_token) {
         try {
-            token = req.cookies.token;
+            token = req.cookies.tutor_token;
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             req.tutor = await Tutor.findById(decoded.id).select('-password');
 

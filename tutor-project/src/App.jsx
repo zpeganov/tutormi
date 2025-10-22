@@ -9,6 +9,7 @@ import { TutorSignup } from './pages/TutorSignup'
 import { StudentDashboard } from './pages/StudentDashboard'
 import { ProfilePage } from './pages/ProfilePage';
 import { TutorProfilePage } from './pages/TutorProfilePage';
+import { TutorLessonPlans } from './components/TutorLessonPlans';
 
 function App() {
 
@@ -39,7 +40,7 @@ function App() {
           </Route>
           <Route path='/tutor-dashboard' element={<TutorDashboard />}>
             <Route path="profile" element={<TutorProfilePage />} />
-            {/* Other dashboard routes can be added here */}
+            <Route path = "lesson-plans" element={<TutorLessonPlans />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -39,8 +39,8 @@ export const loginTutor = async (req, res) => {
         const isMatch = await bcrypt.compare(password, tutor.password);
         if (isMatch) {
             const token = jwt.sign({ id: tutor._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-            console.log("Generated Token:", token); // Debugging line
-            res.cookie('token', token, { httpOnly: true });
+            
+            res.cookie('tutor_token', token, { httpOnly: true });
             return res.json({ message: "Login successful", token });
         } else if (!isMatch) {
             return res.status(400).json({ message: "Invalid credentials" });
