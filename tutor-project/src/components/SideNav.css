@@ -1,6 +1,6 @@
 .side-nav {
     width: 250px;
-    height: 100vh;
+    height: auto;
     background-color: #ffffff;
     padding-top: 40px;
     color: #333333;
@@ -24,7 +24,7 @@
 }
 
 .side-nav li a:hover {
-    background-color: #007bff;
+    background-color: black;
     padding-left: 30px;
     color: white;
 }

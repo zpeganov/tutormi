@@ -19,18 +19,16 @@
     width: 100%;
     overflow: hidden;
     line-height: 0;
-    position: relative;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
 }
 .curved-header img {
-    width: 100%;
-    height: auto;
-    display: block;
+    position: fixed;
 }
 .text-container {
-    position: absolute;
+    position: fixed;
     top: 20px;
     left: 0;
     right: 0;

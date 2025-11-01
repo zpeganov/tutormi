@@ -72,7 +72,7 @@ export function TutorLessonPlans() {
 
     return (
         <div className="lesson-plans-container">
-            <h1>Manage Lesson Plans</h1>
+            <h1 className="managelessonplans-title">Manage Lesson Plans</h1>
 
             {/* Upload Form Section */}
             <div className="upload-section card">

@@ -1,0 +1,66 @@
+/* Combined styles from StudentLogin.css and StudentSignup.css */
+.student-auth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.greeting-header {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.student-auth-container .email-container input,
+.student-auth-container .password-container input,
+.student-auth-container .name-container input {
+    width: 250px;
+    height: 20px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.student-auth-container .button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.submit-button {
+    width: 90px;
+    height: 40px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: opacity 0.3s ease;
+}
+
+.submit-button:hover {
+    opacity: 0.8;
+}
+
+/* Styles for the toggle button (Sign Up Here / Log In Here) */
+.sign-up-button,
+.login-button {
+    margin-left: 10px;
+    background-color: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: text-decoration 0.3s ease;
+}
+
+.sign-up-button:hover,
+.login-button:hover {
+    text-decoration: underline;
+    color: blue;
+}

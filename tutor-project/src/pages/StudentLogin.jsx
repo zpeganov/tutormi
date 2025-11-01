@@ -7,6 +7,7 @@ import './StudentLogin.css';
 export function StudentLogin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
@@ -24,7 +25,11 @@ export function StudentLogin() {
             .then(result => {
                 navigate('/student-dashboard');
             }).catch(err => {
-                console.error(err);
+                if (err.response && err.response.status === 400) {
+                    setErrorMessage("Invalid credentials. Please try again.");
+                } else {
+                    setErrorMessage("An error occurred. Please try again later.");
+                }
             });
 
     }
@@ -43,6 +48,11 @@ export function StudentLogin() {
                         <div className="password">Password:</div>
                         <input type="password" value={password} onChange={handlePasswordChange} required />
                     </div>
+                    {errorMessage && (
+                        <div className="error-message" style={{ color: 'red', marginTop: '10px' }}>
+                            {errorMessage}
+                        </div>
+                    )}
                     <div className="no-account-container">
                         Don't have an account?
                         <button className="sign-up-button" onClick={handleClick}>

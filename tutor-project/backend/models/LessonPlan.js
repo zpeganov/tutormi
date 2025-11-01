@@ -5,11 +5,11 @@ const lessonPlanSchema = new mongoose.Schema({
     type: String, 
     required: true 
   },
-  // Stores the s3 URL
-  fileUrl: { 
+  // Stores the S3 object key, not the full URL
+  s3Key: { 
     type: String, 
     required: true 
-  }, 
+  },
   
   // Link to Tutor
   tutor: { 

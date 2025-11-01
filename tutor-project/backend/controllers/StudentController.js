@@ -12,7 +12,9 @@ export const registerStudent = async (req, res) => {
             return res.status(400).json({ message: "Student already exists" });
         }
         const hashed = await bcrypt.hash(password, 10);
-        const student = new Student({ name, email, password: hashed });
+        const studentid = 'STUDENT' + Date.now();
+        const tutorids = [];
+        const student = new Student({ name, email, password: hashed, studentid, tutorids });
         await student.save();
         res.status(201).json({ message: "Student registered successfully" });
     } catch (error) {
@@ -50,6 +52,28 @@ export const loginStudent = async (req, res) => {
         res.status(500).json({ message: "Server Error" });
     }
 } 
+
+export const addTutorToStudent = async (req, res) => {
+    try {
+        const { studentId, tutorId } = req.body;
+
+        const student = await Student.findById(studentId);
+        if (!student) {
+            return res.status(404).json({ message: "Student not found" });
+        }
+
+        // Avoid adding duplicate tutor IDs
+        if (!student.tutorids.includes(tutorId)) {
+            student.tutorids.push(tutorId);
+            await student.save();
+        }
+
+        res.status(200).json({ message: "Tutor added to student successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error" });
+    }
+}
 
 // The new, secure way to write getStudentProfile
 export const getStudentProfile = async (req, res) => {

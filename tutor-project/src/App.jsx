@@ -10,6 +10,8 @@ import { StudentDashboard } from './pages/StudentDashboard'
 import { ProfilePage } from './pages/ProfilePage';
 import { TutorProfilePage } from './pages/TutorProfilePage';
 import { TutorLessonPlans } from './components/TutorLessonPlans';
+import { StudentAuth } from './pages/StudentAuth';
+import { TutorAuth } from './pages/TutorAuth';
 
 function App() {
 
@@ -29,10 +31,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route index element={<HomePage />} />
-          <Route path='/student-login' element={<StudentLogin />} />
-          <Route path='/tutor-login' element={<TutorLogin />} />
-          <Route path='/student-signup' element={<StudentSignup />} />
-          <Route path='/tutor-signup' element={<TutorSignup />} />
+          <Route path='/student-auth' element={<StudentAuth />} />
+          <Route path='/tutor-auth' element={<TutorAuth />} />
 
           <Route path='/student-dashboard' element={<StudentDashboard />}>
             <Route path="profile" element={<ProfilePage />} />

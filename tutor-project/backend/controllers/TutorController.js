@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 
 export const registerTutor = async (req, res) => {
     try{
-        const { name, email, password } = req.body;
+        const { name, email, password} = req.body;
         if(!name || !email || !password){
             return res.status(400).json({ message: "All fields are required" });
         }
@@ -13,7 +13,9 @@ export const registerTutor = async (req, res) => {
             return res.status(400).json({ message: "Tutor already exists" });
         }
         const hashed = await bcrypt.hash(password, 10);
-        const tutor = new Tutor({ name, email, password: hashed });
+        const tutorid = 'TUTOR' + Date.now();
+        const studentids = [];
+        const tutor = new Tutor({ name, email, password: hashed, tutorid, studentids });
         await tutor.save();
         res.status(201).json({ message: "Tutor registered successfully" });
     } catch (error) {
@@ -51,6 +53,28 @@ export const loginTutor = async (req, res) => {
         res.status(500).json({ message: "Server Error" });
     }
 } 
+
+export const addStudentToTutor = async (req, res) => {
+    try {
+        const { tutorId, studentId } = req.body;
+        
+        const tutor = await Tutor.findById(tutorId);
+        if (!tutor) {
+            return res.status(404).json({ message: "Tutor not found" });
+        }
+
+        // Avoid adding duplicate student IDs
+        if (!tutor.studentids.includes(studentId)) {
+            tutor.studentids.push(studentId);
+            await tutor.save();
+        }
+
+        res.status(200).json({ message: "Student added to tutor successfully" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Server Error" });
+    }
+}
 
 // The new, secure way to write getTutorProfile
 export const getTutorProfile = async (req, res) => {

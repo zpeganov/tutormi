@@ -28,7 +28,7 @@
   font-weight: bold;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 769px) {
   .main-container {
     margin-top: 185px;
     flex-direction: column;
@@ -37,6 +37,23 @@
     height: auto;
     padding: 20px;
   }
+  /* @media (min-width: 0) and (max-width: 768px) {
+  .main-container {
+    margin-top: 185px;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    height: auto;
+    padding: 20px;
+  }
+  .student-or-tutor-container {
+    margin-top: 60px;
+  }
+  .footer-links {
+    margin-top: 60px;
+    color: blue;
+  }
+} */
 
   .landing-title-container {
     margin-left: 0;
@@ -136,11 +153,18 @@
 }
 
 .footer-links {
+  min-width: 300px;
   text-align: center;
   padding-top: 50px;
   font-size: 20px;
   color: #2D3142;
   padding-bottom: 20px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  margin: 0 auto;
+  bottom: 150px;
 }
 
 .footer-links span {

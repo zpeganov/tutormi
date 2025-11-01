@@ -16,6 +16,15 @@ const TutorSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 6
+    },
+    tutorid: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    studentids: {
+        type: [String],
+        default: []
     }
 
 }, { timestamps: true });

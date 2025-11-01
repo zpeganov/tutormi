@@ -5,11 +5,11 @@ export function HomePage() {
     const navigate = useNavigate();
 
     const handleStudentClick = () => {
-        navigate('/student-login');
+        navigate('/student-auth');
     };
 
     const handleTutorClick = () => {
-        navigate('/tutor-login');
+        navigate('/tutor-auth');
     }
 
     return (
