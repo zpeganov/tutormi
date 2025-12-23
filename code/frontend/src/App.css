@@ -1,42 +1,189 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* Fonts */
+@font-face {
+  font-family: "Melonaire";
+  src: url("assets/fonts/Melonaire.otf") format("opentype");
 }
 
+@font-face {
+  font-family: "Coolvetica";
+  src: url("assets/fonts/Coolvetica Rg.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "StretchPro";
+  src: url("assets/fonts/StretchPro.otf") format("opentype");
+}
+
+/* Page Container */
+.home-container {
+  min-height: 100vh;
+  background-color: #4DAF7C;
+  padding: 40px 80px 60px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Content Wrapper - keeps tagline aligned with cards */
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Logo */
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  font-family: 'Melonaire', cursive;
+  font-size: 42px;
+  color: white;
+  margin-bottom: 50px;
+  align-self: flex-start;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Tagline */
+.tagline {
+  font-family: 'Coolvetica', sans-serif;
+  font-weight: normal;
+  color: white;
+  font-size: 42px;
+  line-height: 1.25;
+  margin-bottom: 60px;
+  text-align: left;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.tagline .tutormi {
+  font-family: 'Melonaire', cursive;
+}
+
+.tagline .bold {
+  font-family: 'StretchPro', sans-serif;
+  font-weight: bold;
+}
+
+/* Cards Section */
+.cards-section {
+  display: flex;
+  gap: 150px;
+  margin-bottom: 20px;
 }
 
 .card {
-  padding: 2em;
+  display: flex;
+  flex-direction: column;
 }
 
-.read-the-docs {
-  color: #888;
+.card-row {
+  display: flex;
+}
+
+.card-image {
+  width: 500px;
+  height: 500px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vertical-text {
+  writing-mode: vertical-rl;
+  font-family: 'StretchPro', sans-serif;
+  color: white;
+  font-size: 28px;
+  letter-spacing: 4px;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(180deg);
+}
+
+.vertical-text-left {
+  writing-mode: vertical-rl;
+  font-family: 'StretchPro', sans-serif;
+  color: white;
+  font-size: 28px;
+  letter-spacing: 4px;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-label {
+  font-family: 'Coolvetica', sans-serif;
+  color: white;
+  font-size: 26px;
+  margin-top: 15px;
+}
+
+.card-label-right {
+  font-family: 'Coolvetica', sans-serif;
+  color: white;
+  font-size: 26px;
+  margin-top: 15px;
+  text-align: right;
+}
+
+/* Bottom Tagline */
+.bottom-tagline {
+  font-family: 'Coolvetica', sans-serif;
+  color: white;
+  font-size: 36px;
+  margin-top: 50px;
+  margin-bottom: 60px;
+  text-align: center;
+}
+
+.bottom-tagline .for-tutors {
+  font-family: 'StretchPro', sans-serif;
+  font-size: 32px;
+}
+
+/* Nav Circles */
+.nav-circles {
+  display: flex;
+  gap: 60px;
+  justify-content: center;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s;
+}
+
+.circle {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  margin-bottom: 18px;
+}
+
+.circle.about {
+  background-color: #8A9FB0;
+}
+
+.circle.news {
+  background-color: #9DCFE8;
+}
+
+.circle.contact {
+  background-color: #CEE8D3;
+}
+
+.nav-item span {
+  font-family: 'Coolvetica', sans-serif;
+  color: white;
+  font-size: 28px;
 }
