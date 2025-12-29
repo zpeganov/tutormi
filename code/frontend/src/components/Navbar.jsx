@@ -28,18 +28,22 @@ function Navbar({ userType = 'student' }) {
         >
           {userType === 'tutor' ? 'Dashboard' : 'Dashboard'}
         </span>
-        <span
-          className={`navbar-link ${isActive('/lessons') ? 'active' : ''}`}
-          onClick={() => navigate(`/${userType}/lessons`)}
-        >
-          Lesson Plans
-        </span>
-        <span
-          className={`navbar-link ${isActive('/announcements') ? 'active' : ''}`}
-          onClick={() => navigate(`/${userType}/announcements`)}
-        >
-          Announcements
-        </span>
+        {userType !== 'tutor' && (
+          <>
+            <span
+              className={`navbar-link ${isActive('/lessons') ? 'active' : ''}`}
+              onClick={() => navigate(`/${userType}/lessons`)}
+            >
+              Lesson Plans
+            </span>
+            <span
+              className={`navbar-link ${isActive('/announcements') ? 'active' : ''}`}
+              onClick={() => navigate(`/${userType}/announcements`)}
+            >
+              Announcements
+            </span>
+          </>
+        )}
         {userType === 'tutor' && (
           <span
             className={`navbar-link ${isActive('/settings') ? 'active' : ''}`}
