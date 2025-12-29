@@ -11,7 +11,7 @@ function TutorCourses() {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState(null);
-  const [courseFormData, setCourseFormData] = useState({ name: '', description: '', image: '' });
+  const [courseFormData, setCourseFormData] = useState({ name: '', description: '', image_url: '' });
 
   useEffect(() => {
     console.log('TutorCourses component mounted');
@@ -51,7 +51,7 @@ function TutorCourses() {
 
   const openEditModal = (course) => {
     setEditingCourse(course);
-    setCourseFormData({ name: course.name, description: course.description, image: course.image });
+    setCourseFormData({ name: course.name, description: course.description, image_url: course.image_url });
     setIsModalOpen(true);
   };
 
@@ -66,12 +66,24 @@ function TutorCourses() {
     setCourseFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    setCourses(courses.map(course =>
-      course.id === editingCourse.id ? { ...course, ...courseFormData } : course
-    ));
-    closeModal();
+    try {
+      const updateData = {
+        name: courseFormData.name,
+        description: courseFormData.description,
+      };
+      if (courseFormData.image_url && courseFormData.image_url.trim() !== '') {
+        updateData.image_url = courseFormData.image_url;
+      }
+      await updateCourse(editingCourse.id, updateData);
+      // Refresh courses from backend
+      const response = await getCourses();
+      setCourses((response.courses || []));
+      closeModal();
+    } catch (err) {
+      alert('Failed to update course.');
+    }
   };
 
   if (isLoading) {
@@ -140,12 +152,12 @@ function TutorCourses() {
               ></textarea>
             </div>
             <div className="form-group">
-              <label htmlFor="image">Image URL</label>
+              <label htmlFor="image_url">Image URL</label>
               <input
                 type="text"
-                id="image"
-                name="image"
-                value={courseFormData.image}
+                id="image_url"
+                name="image_url"
+                value={courseFormData.image_url}
                 onChange={handleFormChange}
               />
             </div>

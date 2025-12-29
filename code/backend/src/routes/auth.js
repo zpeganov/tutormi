@@ -172,18 +172,22 @@ router.post('/login/tutor', [
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.error('Validation errors:', errors.array());
       return res.status(400).json({ errors: errors.array() });
     }
 
     const { email, password } = req.body;
+    console.log('Tutor login attempt:', { email });
 
     // Find tutor
     const result = await db.query(
       'SELECT * FROM tutors WHERE email = ?',
       [email]
     );
+    console.log('Tutor lookup result:', result.rows);
 
     if (result.rows.length === 0) {
+      console.warn('Tutor not found for email:', email);
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
@@ -192,7 +196,14 @@ router.post('/login/tutor', [
     // Verify password
     const validPassword = await bcrypt.compare(password, tutor.password_hash);
     if (!validPassword) {
+      console.warn('Invalid password for tutor:', email);
       return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // Check for required fields
+    if (!tutor.id || !tutor.tutor_id || !tutor.first_name || !tutor.last_name) {
+      console.error('Tutor record missing required fields:', tutor);
+      return res.status(500).json({ error: 'Tutor record incomplete. Please contact support.' });
     }
 
     // Generate JWT
@@ -217,7 +228,7 @@ router.post('/login/tutor', [
     });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ error: 'Login failed' });
+    res.status(500).json({ error: 'Login failed', details: error.message });
   }
 });
 

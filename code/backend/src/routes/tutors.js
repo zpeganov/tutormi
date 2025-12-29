@@ -1,8 +1,87 @@
+
 const express = require('express');
 const db = require('../db');
 const { authenticateToken, requireTutor } = require('../middleware/auth');
-
+const bcrypt = require('bcryptjs');
 const router = express.Router();
+
+// Change tutor password
+router.put('/me/password', authenticateToken, requireTutor, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'Current password and new password are required.' });
+    }
+    // Get current password hash
+    const result = await db.query('SELECT password_hash FROM tutors WHERE id = ?', [req.user.id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Tutor not found.' });
+    }
+    const tutor = result.rows[0];
+    const valid = await bcrypt.compare(currentPassword, tutor.password_hash);
+    if (!valid) {
+      return res.status(401).json({ error: 'Current password is incorrect.' });
+    }
+    // Hash new password
+    const newHash = await bcrypt.hash(newPassword, 10);
+    await db.query('UPDATE tutors SET password_hash = ? WHERE id = ?', [newHash, req.user.id]);
+    res.json({ message: 'Password updated successfully.' });
+  } catch (error) {
+    console.error('Change password error:', error);
+    res.status(500).json({ error: 'Failed to update password.' });
+  }
+});
+
+// Update tutor profile
+router.put('/me', authenticateToken, requireTutor, async (req, res) => {
+  try {
+    // Accept both camelCase and snake_case from frontend
+    const firstName = req.body.firstName || req.body.first_name;
+    const lastName = req.body.lastName || req.body.last_name;
+    const email = req.body.email;
+    // Only update fields that are provided
+    if (!firstName && !lastName && !email) {
+      return res.status(400).json({ error: 'At least one field (firstName, lastName, email) is required.' });
+    }
+    // Check if email is already used by another tutor
+    if (email) {
+      const emailCheck = await db.query(
+        'SELECT id FROM tutors WHERE email = ? AND id != ?',
+        [email, req.user.id]
+      );
+      if (emailCheck.rows.length > 0) {
+        return res.status(400).json({ error: 'Email already in use.' });
+      }
+    }
+    // Build dynamic update query
+    const updates = [];
+    const params = [];
+    if (firstName) {
+      updates.push('first_name = ?');
+      params.push(firstName);
+    }
+    if (lastName) {
+      updates.push('last_name = ?');
+      params.push(lastName);
+    }
+    if (email) {
+      updates.push('email = ?');
+      params.push(email);
+    }
+    if (updates.length === 0) {
+      return res.status(400).json({ error: 'No valid fields to update.' });
+    }
+    params.push(req.user.id);
+    await db.query(
+      `UPDATE tutors SET ${updates.join(', ')} WHERE id = ?`,
+      params
+    );
+    res.json({ message: 'Profile updated successfully.' });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({ error: 'Failed to update profile.' });
+  }
+});
 
 // Get tutor profile
 router.get('/profile', authenticateToken, requireTutor, async (req, res) => {

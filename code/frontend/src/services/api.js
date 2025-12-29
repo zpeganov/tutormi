@@ -1,3 +1,17 @@
+// Change tutor password
+export const changeTutorPassword = async (passwordData) => {
+  return authFetch('/tutors/me/password', {
+    method: 'PUT',
+    body: JSON.stringify(passwordData),
+  });
+};
+// Update tutor profile
+export const updateTutorProfile = async (profileData) => {
+  return authFetch('/tutors/me', {
+    method: 'PUT',
+    body: JSON.stringify(profileData),
+  });
+};
 // API Service for communicating with the backend
 
 const API_BASE_URL = '/api';
@@ -32,6 +46,7 @@ const authFetch = async (endpoint, options = {}) => {
   return data;
 };
 
+
 // Auth API
 export const authAPI = {
   // Register tutor
@@ -46,7 +61,6 @@ export const authAPI = {
     }
     return data;
   },
-  
   // Register student
   registerStudent: async (userData) => {
     return authFetch('/auth/register/student', {
@@ -54,7 +68,6 @@ export const authAPI = {
       body: JSON.stringify(userData),
     });
   },
-  
   // Login tutor
   loginTutor: async (credentials) => {
     const data = await authFetch('/auth/login/tutor', {
@@ -67,7 +80,6 @@ export const authAPI = {
     }
     return data;
   },
-  
   // Login student
   loginStudent: async (credentials) => {
     const data = await authFetch('/auth/login/student', {
@@ -80,22 +92,20 @@ export const authAPI = {
     }
     return data;
   },
-  
-  // Get current user
-  getCurrentUser: async () => {
-    return authFetch('/auth/me');
-  },
-  
   // Logout
   logout: () => {
     localStorage.removeItem('tutormi_token');
     localStorage.removeItem('tutormi_user');
   },
-  
   // Check if logged in
   isLoggedIn: () => {
     return !!getToken();
   },
+};
+
+// Named export for getCurrentUser
+export const getCurrentUser = async () => {
+  return authFetch('/auth/me');
 };
 
 // Lesson API

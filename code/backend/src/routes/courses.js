@@ -56,7 +56,14 @@ router.post('/', authenticateToken, requireTutor, [
 router.put('/:id', authenticateToken, requireTutor, [
   body('name').optional().trim().notEmpty(),
   body('description').optional().trim(),
-  body('image_url').optional().isURL()
+  body('image_url').optional().custom((value) => {
+    if (!value) return true;
+    // Accept standard URLs or data URLs
+    const isHttpUrl = /^https?:\/\//.test(value);
+    const isDataUrl = /^data:image\/(png|jpeg|jpg|gif|webp);base64,/.test(value);
+    if (isHttpUrl || isDataUrl) return true;
+    throw new Error('image_url must be a valid URL or data URL');
+  })
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

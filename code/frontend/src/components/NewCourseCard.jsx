@@ -4,7 +4,7 @@ import './NewCourseCard.css';
 
 function NewCourseCard({ course, onEdit }) {
   const navigate = useNavigate();
-  const { id, name, image, description } = course;
+  const { id, name, image_url, description } = course;
 
   const handleCardClick = () => {
     navigate(`/tutor/courses/${id}`);
@@ -21,7 +21,7 @@ function NewCourseCard({ course, onEdit }) {
         Edit
       </button>
       <div className="new-course-card-image">
-        <img src={image || 'https://placehold.co/600x400'} alt={name} />
+        <img src={image_url || 'https://placehold.co/600x400'} alt={name} />
       </div>
       <div className="new-course-card-content">
         <h3 className="new-course-card-title">{name}</h3>

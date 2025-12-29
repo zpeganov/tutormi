@@ -16,6 +16,7 @@ import TutorCourses from './pages/TutorCourses'
 import TutorCourseDetails from './pages/TutorCourseDetails'
 import Profile from './components/Profile' // Corrected import path
 import TutorLayout from './TutorLayout' // Import TutorLayout
+import Settings from './pages/Settings' // Import Settings directly
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
           <Route path="announcements" element={<Announcements />} />
           <Route path="profile" element={<Profile />} />
           <Route path="courses/:id" element={<TutorCourseDetails />} />
+          <Route path="settings" element={<Settings />} /> {/* Fixed Settings route */}
         </Route>
       </Routes>
     </Router>
