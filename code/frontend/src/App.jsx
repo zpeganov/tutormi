@@ -1,67 +1,52 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './App.css'
-import studentImage from './student_image.png'
-import tutorImage from './tutor_image.png'
+import LandingPage from './pages/LandingPage'
+import StudentDashboard from './pages/StudentDashboard'
+import TutorDashboard from './pages/TutorDashboard'
+import LessonPlans from './pages/LessonPlans'
+import Announcements from './pages/Announcements'
+import StudentLogin from './pages/StudentLogin'
+import TutorLogin from './pages/TutorLogin'
+import StudentRegister from './pages/StudentRegister'
+import TutorRegister from './pages/TutorRegister'
+import StudentRequests from './pages/StudentRequests'
+import MyStudents from './pages/MyStudents'
+import DashboardHome from './pages/DashboardHome'
+import TutorCourses from './pages/TutorCourses'
+import TutorCourseDetails from './pages/TutorCourseDetails'
+import Profile from './components/Profile' // Corrected import path
+import TutorLayout from './TutorLayout' // Import TutorLayout
 
 function App() {
   return (
-    <div className="home-container">
-      {/* Logo */}
-      <div className="logo">Tutormi</div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        {/* Auth Routes */}
+        <Route path="/login/student" element={<StudentLogin />} />
+        <Route path="/login/tutor" element={<TutorLogin />} />
+        <Route path="/register/student" element={<StudentRegister />} />
+        <Route path="/register/tutor" element={<TutorRegister />} />
 
-      {/* Content Wrapper - keeps tagline aligned with cards */}
-      <div className="content-wrapper">
-        {/* Tagline */}
-        <h1 className="tagline">
-          Do Re <span className="tutormi">Tutormi</span>, Your <span className="bold">All in One</span> for Student<br />
-          Access to Tutor Resources
-        </h1>
+        {/* Student Routes */}
+        <Route path="/student" element={<StudentDashboard />}>
+          <Route index element={<DashboardHome />} />
+          <Route path="lessons" element={<LessonPlans />} />
+          <Route path="announcements" element={<Announcements />} />
+        </Route>
 
-        {/* Cards */}
-        <div className="cards-section">
-          <div className="card">
-            <div className="card-row">
-              <div className="card-image">
-                <img src={studentImage} alt="Student" />
-              </div>
-              <div className="vertical-text">STUDENT</div>
-            </div>
-            <div className="card-label">Student</div>
-          </div>
-
-          <div className="card">
-            <div className="card-row">
-              <div className="vertical-text-left">TUTOR</div>
-              <div className="card-image">
-                <img src={tutorImage} alt="Tutor" />
-              </div>
-            </div>
-            <div className="card-label-right">Tutor</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom Tagline */}
-      <p className="bottom-tagline">
-        Made by tutors, <span className="for-tutors">for TUTORS</span>
-      </p>
-
-      {/* Navigation Circles */}
-      <div className="nav-circles">
-        <div className="nav-item">
-          <div className="circle about"></div>
-          <span>About</span>
-        </div>
-        <div className="nav-item">
-          <div className="circle news"></div>
-          <span>News</span>
-        </div>
-        <div className="nav-item">
-          <div className="circle contact"></div>
-          <span>Contact</span>
-        </div>
-      </div>
-    </div>
+        {/* Tutor Dashboard */}
+        <Route path="/tutor" element={<TutorLayout />}>
+          <Route index element={<TutorCourses />} /> {/* Set as the new index */}
+          <Route path="lessons" element={<LessonPlans />} />
+          <Route path="announcements" element={<Announcements />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="courses/:id" element={<TutorCourseDetails />} />
+        </Route>
+      </Routes>
+    </Router>
   )
 }
 
 export default App
+

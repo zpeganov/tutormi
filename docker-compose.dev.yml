@@ -1,0 +1,61 @@
+# Development Docker Compose - with hot reloading
+services:
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: tutormi-db-dev
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: tutormi_password
+      MYSQL_DATABASE: tutormi
+    volumes:
+      - mysql_data_dev:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-ptutormi_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    command: --default-authentication-plugin=mysql_native_password
+
+  # Backend API (with nodemon for hot reload)
+  backend:
+    build:
+      context: ./code/backend
+      dockerfile: Dockerfile.dev
+    container_name: tutormi-backend-dev
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 8000
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: tutormi
+      DB_USER: root
+      DB_PASSWORD: tutormi_password
+      JWT_SECRET: tutormi-dev-secret-change-in-production
+      JWT_EXPIRES_IN: 7d
+    volumes:
+      - ./code/backend/src:/app/src
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Frontend (Vite dev server)
+  frontend:
+    build:
+      context: ./code/frontend
+      dockerfile: Dockerfile.dev
+    container_name: tutormi-frontend-dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./code/frontend/src:/app/src
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data_dev:

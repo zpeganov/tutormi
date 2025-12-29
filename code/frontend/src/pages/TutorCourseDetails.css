@@ -1,0 +1,59 @@
+/* Additional styles for TutorCourseDetails page */
+
+.students-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.student-card {
+  background-color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.student-name {
+  font-family: 'Coolvetica', sans-serif;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.student-email {
+  font-family: 'Coolvetica', sans-serif;
+  color: #777;
+}
+
+.lesson-card .lesson-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+.announcement-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-edit {
+  font-family: 'Coolvetica', sans-serif;
+  font-size: 15px;
+  padding: 10px 24px;
+  background-color: transparent;
+  color: #3b82f6; /* A blue color for editing */
+  border: 2px solid #3b82f6;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-edit:hover {
+  background-color: #3b82f6;
+  color: white;
+}

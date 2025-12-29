@@ -1,0 +1,168 @@
+/* /Users/zach/Documents/tutormi/code/frontend/src/components/NewCourseCard.css */
+
+.new-course-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative; /* This is the fix */
+}
+
+.new-course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.new-course-card.with-image {
+  background-size: cover;
+  background-position: center;
+}
+
+.new-course-card.with-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+  z-index: 1;
+}
+
+.new-course-card .card-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 1.5rem;
+}
+
+.new-course-card-title {
+  font-family: 'Coolvetica Rg', sans-serif;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+.new-course-card-description {
+  font-family: 'Coolvetica', sans-serif;
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.4;
+  flex-grow: 1;
+  margin-bottom: 1rem;
+}
+
+.new-course-card-edit-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 3;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-family: 'Coolvetica', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.new-course-card-edit-btn:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.new-course-card-students {
+  font-family: 'Coolvetica Rg', sans-serif;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+.new-course-card-view-btn {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  font-family: 'Coolvetica', sans-serif;
+  font-size: 14px;
+  padding: 8px 16px;
+  background-color: #4DAF7C;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center; /* Center text in the div */
+  opacity: 1; /* Ensure it's always visible */
+}
+
+
+.new-course-card-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  z-index: 2;
+  transition: background-color 0.2s ease;
+}
+
+.new-course-card-add:hover {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.new-course-card-add-icon {
+  font-size: 2rem;
+  color: #4DAF7C;
+  margin-right: 0.5rem;
+}
+
+.new-course-card-add-text {
+  font-family: 'Coolvetica', sans-serif;
+  font-size: 1.25rem;
+  color: #333;
+  text-align: center;
+}
+
+.new-course-card-image {
+  position: relative;
+  width: 100%;
+  height: 252px;
+  overflow: hidden;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.new-course-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.new-course-card:hover .new-course-card-image img {
+  transform: scale(1.05);
+}
+
+.new-course-card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 1.5rem;
+}

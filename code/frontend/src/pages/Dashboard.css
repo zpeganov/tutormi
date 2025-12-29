@@ -1,0 +1,55 @@
+/* /Users/zach/Documents/tutormi/code/frontend/src/pages/Dashboard.css */
+
+.dashboard-content {
+  padding: 2rem 4rem; /* Increased padding */
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.dashboard-title {
+  font-family: 'Coolvetica', sans-serif;
+  font-size: 2.5rem;
+  color: #2d3748;
+  margin: 0;
+}
+
+.dashboard-subtitle {
+  font-family: 'Coolvetica Rg', sans-serif;
+  font-size: 1.1rem;
+  color: #718096;
+  margin-top: 0.5rem;
+}
+
+.courses-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.add-course-btn {
+  font-family: 'Coolvetica Rg', sans-serif;
+  background-color: white;
+  color: #2d3748;
+  border: 1px solid #cbd5e0;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-course-btn:hover {
+  background-color: #f7fafc;
+  border-color: #a0aec0;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(358px, 1fr));
+  gap: 25px;
+  margin-bottom: 3rem;
+}
