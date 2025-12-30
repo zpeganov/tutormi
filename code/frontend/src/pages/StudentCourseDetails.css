@@ -1,0 +1,63 @@
+/* Styles for StudentCourseDetails page to match TutorCourseDetails */
+.student-course-details {
+  background: #f8fafc;
+  min-height: 100vh;
+  padding: 40px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.course-header {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 32px 48px;
+  margin-bottom: 32px;
+  width: 100%;
+  max-width: 700px;
+}
+
+.course-header h1 {
+  font-family: 'Coolvetica', sans-serif;
+  font-size: 2.5rem;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+.course-description {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.course-tutor {
+  font-size: 1rem;
+  color: #3b82f6;
+  margin-top: 8px;
+}
+
+.course-section {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 32px 48px;
+  margin-bottom: 32px;
+  width: 100%;
+  max-width: 700px;
+}
+
+.course-section h2 {
+  font-family: 'Coolvetica', sans-serif;
+  font-size: 1.5rem;
+  color: #222;
+  margin-bottom: 18px;
+}
+
+.lessons-list, .announcements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Use existing card styles from Components.css for cards */

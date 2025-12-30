@@ -5,9 +5,14 @@ import './NewCourseCard.css';
 function NewCourseCard({ course, onEdit, hideEdit }) {
   const navigate = useNavigate();
   const { id, name, image_url, description } = course;
+  const userType = localStorage.getItem('userType') || 'student';
 
   const handleCardClick = () => {
-    navigate(`/tutor/courses/${id}`);
+    if (userType === 'tutor') {
+      navigate(`/tutor/courses/${id}`);
+    } else {
+      navigate(`/student/courses/${id}`);
+    }
   };
 
   return (

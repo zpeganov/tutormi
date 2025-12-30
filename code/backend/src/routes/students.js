@@ -9,13 +9,29 @@ const router = express.Router();
 router.get('/me/courses', authenticateToken, requireStudent, async (req, res) => {
   try {
     const result = await db.query(
-      `SELECT c.*
+      `SELECT c.*, t.first_name AS tutor_first_name, t.last_name AS tutor_last_name, t.email AS tutor_email
        FROM courses c
        JOIN students s ON c.id = s.course_id
+       JOIN tutors t ON c.tutor_id = t.id
        WHERE s.id = ? AND s.status = 'approved'`,
       [req.user.id]
     );
-    res.json({ courses: result.rows });
+    // Map tutor info into course object
+    const courses = result.rows.map(row => ({
+      id: row.id,
+      courseCode: row.course_code,
+      name: row.name,
+      description: row.description,
+      imageUrl: row.image_url,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+      tutor: {
+        firstName: row.tutor_first_name,
+        lastName: row.tutor_last_name,
+        email: row.tutor_email
+      }
+    }));
+    res.json({ courses });
   } catch (error) {
     console.error('Get student courses error:', error);
     res.status(500).json({ error: 'Failed to get student courses' });
