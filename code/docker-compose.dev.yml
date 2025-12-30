@@ -22,7 +22,7 @@ services:
   # Backend API (with nodemon for hot reload)
   backend:
     build:
-      context: ./code/backend
+      context: ./backend
       dockerfile: Dockerfile.dev
     container_name: tutormi-backend-dev
     restart: unless-stopped
@@ -37,7 +37,7 @@ services:
       JWT_SECRET: tutormi-dev-secret-change-in-production
       JWT_EXPIRES_IN: 7d
     volumes:
-      - ./code/backend/src:/app/src
+      - ./backend/src:/app/src
     ports:
       - "8000:8000"
     depends_on:
@@ -47,13 +47,13 @@ services:
   # Frontend (Vite dev server)
   frontend:
     build:
-      context: ./code/frontend
+      context: ./frontend
       dockerfile: Dockerfile.dev
     container_name: tutormi-frontend-dev
     ports:
       - "5173:5173"
     volumes:
-      - ./code/frontend/src:/app/src
+      - ./frontend/src:/app/src
     depends_on:
       - backend
 

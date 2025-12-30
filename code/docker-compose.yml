@@ -21,7 +21,7 @@ services:
   # Backend API
   backend:
     build:
-      context: ./code/backend
+      context: ./backend
       dockerfile: Dockerfile
     container_name: tutormi-backend
     restart: unless-stopped
@@ -44,7 +44,7 @@ services:
   # Frontend (Nginx + React)
   frontend:
     build:
-      context: ./code/frontend
+      context: ./frontend
       dockerfile: Dockerfile
     container_name: tutormi-frontend
     restart: unless-stopped
