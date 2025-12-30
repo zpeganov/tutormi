@@ -35,10 +35,14 @@ router.post('/', authenticateToken, requireTutor, [
   }
 
   try {
-    const { name, description, image_url } = req.body;
+    const { name, description, image_url, course_code } = req.body;
+    if (!course_code) {
+      return res.status(400).json({ error: 'Course code is required.' });
+    }
     const newCourse = {
       id: uuidv4(),
       tutor_id: req.user.id,
+      course_code,
       name,
       description,
       image_url: image_url || null

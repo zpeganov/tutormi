@@ -1,3 +1,22 @@
+// Get courses the logged-in student is enrolled in
+export const getMyCourses = async () => {
+  return authFetch('/students/me/courses');
+};
+// Update student profile
+export const updateStudentProfile = async (profileData) => {
+  return authFetch('/students/me', {
+    method: 'PUT',
+    body: JSON.stringify(profileData),
+  });
+};
+
+// Change student password
+export const changeStudentPassword = async (passwordData) => {
+  return authFetch('/students/me/password', {
+    method: 'PUT',
+    body: JSON.stringify(passwordData),
+  });
+};
 // Change tutor password
 export const changeTutorPassword = async (passwordData) => {
   return authFetch('/tutors/me/password', {

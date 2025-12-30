@@ -41,21 +41,24 @@ const createTables = async () => {
         bio TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        PRIMARY KEY (id)
+        PRIMARY KEY (id),
+        UNIQUE KEY (tutor_id)
       )
     `);
 
     // Create Courses Table
     await conn.execute(`
       CREATE TABLE IF NOT EXISTS courses (
-        id VARCHAR(36) NOT NULL,
+        id VARCHAR(7) NOT NULL,
         tutor_id VARCHAR(36) NOT NULL,
+        course_code VARCHAR(20) NOT NULL,
         name VARCHAR(255) NOT NULL,
         description TEXT,
         image_url VARCHAR(2048),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
+        UNIQUE KEY (course_code),
         FOREIGN KEY (tutor_id) REFERENCES tutors(id) ON DELETE CASCADE
       )
     `);
@@ -64,19 +67,21 @@ const createTables = async () => {
     await conn.execute(`
       CREATE TABLE IF NOT EXISTS students (
         id VARCHAR(36) NOT NULL,
+        student_id VARCHAR(50) UNIQUE,
         email VARCHAR(255) UNIQUE NOT NULL,
         password_hash VARCHAR(255) NOT NULL,
         first_name VARCHAR(255) NOT NULL,
         last_name VARCHAR(255) NOT NULL,
         grade_level VARCHAR(50),
-        tutor_id VARCHAR(36),
-        course_id VARCHAR(36),
+  tutor_id VARCHAR(36),
+  course_id VARCHAR(7),
         status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
         UNIQUE KEY (email),
-        FOREIGN KEY (tutor_id) REFERENCES tutors(id) ON DELETE SET NULL,
+        UNIQUE KEY (student_id),
+        FOREIGN KEY (tutor_id) REFERENCES tutors(tutor_id) ON DELETE SET NULL,
         FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE SET NULL
       )
     `);
@@ -86,7 +91,7 @@ const createTables = async () => {
       CREATE TABLE IF NOT EXISTS lessons (
         id VARCHAR(36) NOT NULL,
         tutor_id VARCHAR(36) NOT NULL,
-        course_id VARCHAR(36) NOT NULL,
+        course_id VARCHAR(7) NOT NULL,
         title VARCHAR(255) NOT NULL,
         subject VARCHAR(255) NOT NULL,
         description TEXT,
@@ -117,14 +122,14 @@ const createTables = async () => {
     await conn.execute(`
       CREATE TABLE IF NOT EXISTS student_requests (
         id VARCHAR(36) PRIMARY KEY,
-        student_id VARCHAR(36),
-        tutor_id VARCHAR(36),
+        student_id VARCHAR(50),
+        tutor_id VARCHAR(50),
         status VARCHAR(20) DEFAULT 'pending',
         message TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
-        FOREIGN KEY (tutor_id) REFERENCES tutors(id) ON DELETE CASCADE,
+        FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+        FOREIGN KEY (tutor_id) REFERENCES tutors(tutor_id) ON DELETE CASCADE,
         UNIQUE KEY unique_request (student_id, tutor_id)
       )
     `);

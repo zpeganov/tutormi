@@ -49,16 +49,23 @@ function TutorCourses() {
   console.log('Is loading:', isLoading);
   console.log('Error state:', error);
 
+
   const openEditModal = (course) => {
     setEditingCourse(course);
     setCourseFormData({ name: course.name, description: course.description, image_url: course.image_url });
     setIsModalOpen(true);
   };
 
+  const openAddModal = () => {
+    setEditingCourse(null);
+    setCourseFormData({ name: '', description: '', image_url: '' });
+    setIsModalOpen(true);
+  };
+
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingCourse(null);
-    setCourseFormData({ name: '', description: '', image: '' });
+    setCourseFormData({ name: '', description: '', image_url: '' });
   };
 
   const handleFormChange = (e) => {
@@ -69,20 +76,33 @@ function TutorCourses() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const updateData = {
-        name: courseFormData.name,
-        description: courseFormData.description,
-      };
-      if (courseFormData.image_url && courseFormData.image_url.trim() !== '') {
-        updateData.image_url = courseFormData.image_url;
+      if (editingCourse) {
+        // Edit existing course
+        const updateData = {
+          name: courseFormData.name,
+          description: courseFormData.description,
+        };
+        if (courseFormData.image_url && courseFormData.image_url.trim() !== '') {
+          updateData.image_url = courseFormData.image_url;
+        }
+        await updateCourse(editingCourse.id, updateData);
+      } else {
+        // Add new course
+        const newData = {
+          name: courseFormData.name,
+          description: courseFormData.description,
+        };
+        if (courseFormData.image_url && courseFormData.image_url.trim() !== '') {
+          newData.image_url = courseFormData.image_url;
+        }
+        await createCourse(newData);
       }
-      await updateCourse(editingCourse.id, updateData);
       // Refresh courses from backend
       const response = await getCourses();
       setCourses((response.courses || []));
       closeModal();
     } catch (err) {
-      alert('Failed to update course.');
+      alert(editingCourse ? 'Failed to update course.' : 'Failed to add course.');
     }
   };
 
@@ -101,7 +121,7 @@ function TutorCourses() {
       </div>
 
       <div className="courses-header">
-        <button className="btn-primary">+ course</button>
+        <button className="btn-primary" onClick={openAddModal}>Add Course</button>
       </div>
 
       <section>
@@ -128,7 +148,7 @@ function TutorCourses() {
       {isModalOpen && (
         <Modal onClose={closeModal}>
           <form onSubmit={handleFormSubmit}>
-            <h2>Edit Course</h2>
+            <h2>{editingCourse ? 'Edit Course' : 'Add Course'}</h2>
             <div className="form-group">
               <label htmlFor="name">Course Title</label>
               <input
@@ -163,7 +183,7 @@ function TutorCourses() {
             </div>
             <div className="modal-actions">
               <button type="button" onClick={closeModal} className="btn-secondary">Cancel</button>
-              <button type="submit" className="btn-primary">Save Changes</button>
+              <button type="submit" className="btn-primary">{editingCourse ? 'Save Changes' : 'Add Course'}</button>
             </div>
           </form>
         </Modal>

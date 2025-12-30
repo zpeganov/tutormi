@@ -30,7 +30,7 @@ function App() {
         <Route path="/register/tutor" element={<TutorRegister />} />
 
         {/* Student Routes */}
-        <Route path="/student" element={<StudentDashboard />}>
+  <Route path="/student/*" element={<StudentDashboard />}>
           <Route index element={<DashboardHome />} />
           <Route path="lessons" element={<LessonPlans />} />
           <Route path="announcements" element={<Announcements />} />

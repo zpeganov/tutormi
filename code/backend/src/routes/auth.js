@@ -3,6 +3,15 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 const { v4: uuidv4 } = require('uuid');
+// Helper to generate a random 7-character alphanumeric ID
+function generateSimpleId(prefix = '') {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let id = '';
+  for (let i = 0; i < 7; i++) {
+    id += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return prefix + id;
+}
 const db = require('../db');
 const { authenticateToken } = require('../middleware/auth');
 
@@ -60,7 +69,7 @@ router.post('/register/tutor', [
     }
 
     // Create tutor with UUID
-    const id = uuidv4();
+  const id = generateSimpleId();
     await db.query(
       `INSERT INTO tutors (id, tutor_id, email, password_hash, first_name, last_name, subject, bio)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -99,7 +108,7 @@ router.post('/register/student', [
   body('password').isLength({ min: 6 }),
   body('firstName').trim().notEmpty(),
   body('lastName').trim().notEmpty(),
-  body('tutorCode').trim().notEmpty()
+  body('courseId').isLength({ min: 7, max: 7 }).withMessage('Course ID must be 7 characters.')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -107,7 +116,7 @@ router.post('/register/student', [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, password, firstName, lastName, gradeLevel, tutorCode } = req.body;
+  const { email, password, firstName, lastName, gradeLevel, courseId } = req.body;
 
     // Check if email already exists
     const existingUser = await db.query(
@@ -119,17 +128,17 @@ router.post('/register/student', [
       return res.status(400).json({ error: 'Email already registered' });
     }
 
-    // Find tutor by tutor_id code
-    const tutorResult = await db.query(
-      'SELECT id, first_name, last_name FROM tutors WHERE tutor_id = ?',
-      [tutorCode.toUpperCase()]
+    // Find course by 7-character course ID
+    const courseResult = await db.query(
+      'SELECT id, tutor_id FROM courses WHERE id = ?',
+      [courseId.toUpperCase()]
     );
 
-    if (tutorResult.rows.length === 0) {
-      return res.status(400).json({ error: 'Invalid Tutor ID. Please check and try again.' });
+    if (courseResult.rows.length === 0) {
+      return res.status(400).json({ error: 'Invalid Course ID. Please check and try again.' });
     }
 
-    const tutor = tutorResult.rows[0];
+    const course = courseResult.rows[0];
 
     // Hash password
     const passwordHash = await bcrypt.hash(password, 10);
@@ -137,9 +146,9 @@ router.post('/register/student', [
     // Create student with pending status
     const id = uuidv4();
     await db.query(
-      `INSERT INTO students (id, email, password_hash, first_name, last_name, grade_level, tutor_id, status)
-       VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')`,
-      [id, email, passwordHash, firstName, lastName, gradeLevel || null, tutor.id]
+      `INSERT INTO students (id, email, password_hash, first_name, last_name, grade_level, tutor_id, course_id, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')`,
+      [id, email, passwordHash, firstName, lastName, gradeLevel || null, course.tutor_id, course.id]
     );
 
     res.status(201).json({
@@ -350,7 +359,7 @@ router.get('/me', authenticateToken, async (req, res) => {
 
       const student = result.rows[0];
       res.json({
-        id: student.id,
+        studentId: student.student_id, // human-readable ID
         email: student.email,
         firstName: student.first_name,
         lastName: student.last_name,

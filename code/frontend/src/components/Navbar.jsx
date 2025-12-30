@@ -42,6 +42,12 @@ function Navbar({ userType = 'student' }) {
             >
               Announcements
             </span>
+            <span
+              className={`navbar-link ${isActive('/settings') ? 'active' : ''}`}
+              onClick={() => navigate('/student/settings')}
+            >
+              Settings
+            </span>
           </>
         )}
         {userType === 'tutor' && (

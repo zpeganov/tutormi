@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './NewCourseCard.css';
 
-function NewCourseCard({ course, onEdit }) {
+function NewCourseCard({ course, onEdit, hideEdit }) {
   const navigate = useNavigate();
   const { id, name, image_url, description } = course;
 
@@ -10,16 +10,13 @@ function NewCourseCard({ course, onEdit }) {
     navigate(`/tutor/courses/${id}`);
   };
 
-  const handleEditClick = (e) => {
-    e.stopPropagation(); // Prevent card click navigation
-    onEdit(course);
-  };
-
   return (
     <div className="new-course-card" onClick={handleCardClick}>
-      <button className="new-course-card-edit-btn" onClick={handleEditClick}>
-        Edit
-      </button>
+      {!hideEdit && (
+        <button className="new-course-card-edit-btn" onClick={e => { e.stopPropagation(); onEdit(course); }}>
+          Edit
+        </button>
+      )}
       <div className="new-course-card-image">
         <img src={image_url || 'https://placehold.co/600x400'} alt={name} />
       </div>
@@ -29,6 +26,6 @@ function NewCourseCard({ course, onEdit }) {
       </div>
     </div>
   );
-};
+}
 
 export default NewCourseCard;

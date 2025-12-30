@@ -3,7 +3,19 @@ const mysql = require('mysql2/promise');
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 
+// Helper to generate a random 7-character alphanumeric ID
+function generateSimpleId(prefix = '') {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let id = '';
+  for (let i = 0; i < 7; i++) {
+    id += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return prefix + id;
+}
+
 const seedDatabase = async () => {
+  // Clean all tables for a fresh seed
+
   const pool = mysql.createPool({
     host: process.env.DB_HOST || 'localhost',
     port: process.env.DB_PORT || 3306,
@@ -15,56 +27,75 @@ const seedDatabase = async () => {
   });
 
   const conn = await pool.getConnection();
-  
+
+  // Clean all tables for a fresh seed (must be after conn is initialized)
+  await conn.query('SET FOREIGN_KEY_CHECKS = 0');
+  await conn.query('TRUNCATE TABLE students');
+  await conn.query('TRUNCATE TABLE courses');
+  await conn.query('TRUNCATE TABLE tutors');
+  await conn.query('TRUNCATE TABLE lessons');
+  await conn.query('TRUNCATE TABLE announcements');
+  await conn.query('TRUNCATE TABLE student_requests');
+  await conn.query('SET FOREIGN_KEY_CHECKS = 1');
+
   try {
     await conn.beginTransaction();
 
     // Create sample tutors
-    const tutorPassword = await bcrypt.hash('password123', 10);
-    const tutor1Id = uuidv4();
-    const tutor2Id = uuidv4();
+  const tutorPassword = await bcrypt.hash('password123', 10);
+  const tutor1Id = uuidv4();
+  const tutor2Id = uuidv4();
+  const tutor1Code = generateSimpleId('TUT');
+  const tutor2Code = generateSimpleId('TUT');
     
     await conn.execute(`
       INSERT IGNORE INTO tutors (id, tutor_id, email, password_hash, first_name, last_name, subject, bio)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `, [tutor1Id, 'TUT001', 'sarah@tutormi.com', tutorPassword, 'Sarah', 'Johnson', 'Mathematics', 'Experienced math tutor with 10 years of teaching experience.']);
+    `, [tutor1Id, tutor1Code, 'sarah@tutormi.com', tutorPassword, 'Sarah', 'Johnson', 'Mathematics', 'Experienced math tutor with 10 years of teaching experience.']);
 
     await conn.execute(`
       INSERT IGNORE INTO tutors (id, tutor_id, email, password_hash, first_name, last_name, subject, bio)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `, [tutor2Id, 'TUT002', 'mike@tutormi.com', tutorPassword, 'Mike', 'Chen', 'Science', 'Physics and Chemistry specialist.']);
+    `, [tutor2Id, tutor2Code, 'mike@tutormi.com', tutorPassword, 'Mike', 'Chen', 'Science', 'Physics and Chemistry specialist.']);
 
     // Create sample courses
-    const course1Id = uuidv4();
-    const course2Id = uuidv4();
-    await conn.execute(`
-      INSERT IGNORE INTO courses (id, tutor_id, name, description, image_url)
-      VALUES (?, ?, ?, ?, ?)
-    `, [course1Id, tutor1Id, 'Algebra 101', 'An introductory course on fundamental algebraic concepts.', 'https://images.unsplash.com/photo-1589481458893-88522b477a1e?q=80&w=2940&auto=format&fit=crop']);
-    
-    await conn.execute(`
-      INSERT IGNORE INTO courses (id, tutor_id, name, description, image_url)
-      VALUES (?, ?, ?, ?, ?)
-    `, [course2Id, tutor1Id, 'Calculus in a Nutshell', 'A fast-paced course on derivatives and integrals.', 'https://images.unsplash.com/photo-1634129299195-5003a63365a0?q=80&w=2940&auto=format&fit=crop']);
+  const course1Id = generateSimpleId();
+  const course2Id = generateSimpleId();
+  console.log('Seeding with course IDs:', course1Id, course2Id);
+  await conn.execute(`
+    INSERT IGNORE INTO courses (id, tutor_id, course_code, name, description, image_url)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `, [course1Id, tutor1Id, 'ALG101', 'Algebra 101', 'An introductory course on fundamental algebraic concepts.', 'https://images.unsplash.com/photo-1589481458893-88522b477a1e?q=80&w=2940&auto=format&fit=crop']);
+  await conn.execute(`
+    INSERT IGNORE INTO courses (id, tutor_id, course_code, name, description, image_url)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `, [course2Id, tutor1Id, 'CALC201', 'Calculus in a Nutshell', 'A fast-paced course on derivatives and integrals.', 'https://images.unsplash.com/photo-1634129299195-5003a63365a0?q=80&w=2940&auto=format&fit=crop']);
 
 
     // Create sample students
     const studentPassword = await bcrypt.hash('password123', 10);
 
-    await conn.execute(`
-      INSERT IGNORE INTO students (id, email, password_hash, first_name, last_name, grade_level, tutor_id, course_id, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [uuidv4(), 'alex@student.com', studentPassword, 'Alex', 'Thompson', '10th Grade', tutor1Id, course1Id, 'approved']);
+    const student1Id = uuidv4();
+    const student2Id = uuidv4();
+    const student3Id = uuidv4();
+    const student1Code = generateSimpleId('STU');
+    const student2Code = generateSimpleId('STU');
+    const student3Code = generateSimpleId('STU');
 
     await conn.execute(`
-      INSERT IGNORE INTO students (id, email, password_hash, first_name, last_name, grade_level, tutor_id, course_id, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [uuidv4(), 'emma@student.com', studentPassword, 'Emma', 'Wilson', '11th Grade', tutor1Id, course2Id, 'approved']);
+      INSERT INTO students (id, student_id, email, password_hash, first_name, last_name, grade_level, tutor_id, course_id, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `, [student1Id, student1Code, 'alex@student.com', studentPassword, 'Alex', 'Thompson', '10th Grade', tutor1Code, course1Id, 'approved']);
 
     await conn.execute(`
-      INSERT IGNORE INTO students (id, email, password_hash, first_name, last_name, grade_level, tutor_id, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `, [uuidv4(), 'pending@student.com', studentPassword, 'James', 'Brown', '9th Grade', tutor1Id, 'pending']);
+      INSERT INTO students (id, student_id, email, password_hash, first_name, last_name, grade_level, tutor_id, course_id, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `, [student2Id, student2Code, 'emma@student.com', studentPassword, 'Emma', 'Wilson', '11th Grade', tutor1Code, course2Id, 'approved']);
+
+    await conn.execute(`
+      INSERT INTO students (id, student_id, email, password_hash, first_name, last_name, grade_level, tutor_id, course_id, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `, [student3Id, student3Code, 'pending@student.com', studentPassword, 'James', 'Brown', '9th Grade', tutor1Code, course1Id, 'pending']);
 
     // Create sample lessons
     await conn.execute(`
