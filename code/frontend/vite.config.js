@@ -13,4 +13,9 @@ export default defineConfig({
       },
     },
   },
+  define: {
+    'process.env': {
+      VITE_API_BASE_URL: '/api',
+    },
+  },
 })

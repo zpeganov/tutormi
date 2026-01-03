@@ -1,0 +1,52 @@
+services:
+  db-dev:
+    image: mysql:8.0
+    container_name: tutormi-db-dev
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-tutormi_password}
+      MYSQL_DATABASE: ${DB_NAME:-tutormi}
+    ports:
+      - "3307:3306"
+    volumes:
+      - tutormi-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-tutormi_password}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  backend-dev:
+    build:
+      context: ./code/backend
+      dockerfile: Dockerfile.dev
+    env_file:
+      - ./code/.env
+    container_name: tutormi-backend-dev
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=db-dev
+    ports:
+      - "8000:8000"
+    depends_on:
+      db-dev:
+        condition: service_healthy
+
+  frontend-dev:
+    build:
+      context: ./code/frontend
+      dockerfile: Dockerfile.dev
+    container_name: tutormi-frontend-dev
+    environment:
+      - BACKEND_HOST=backend-dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./code/frontend/src:/app/src
+    depends_on:
+      - backend-dev
+
+volumes:
+  tutormi-db-data:
