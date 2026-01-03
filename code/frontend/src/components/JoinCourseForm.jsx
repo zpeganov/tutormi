@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import api from '../services/api';
+import { joinCourse } from '../services/api';
 
 const JoinCourseForm = ({ onJoin }) => {
   const [courseId, setCourseId] = useState('');
@@ -8,18 +8,21 @@ const JoinCourseForm = ({ onJoin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!courseId.trim()) {
+      setError('Course ID cannot be empty.');
+      return;
+    }
     setLoading(true);
     setError('');
     try {
-      // Call backend to join course
-      const res = await api.post('/students/join-course', { courseId });
-      if (res.data.success) {
-        onJoin && onJoin(courseId);
-      } else {
-        setError(res.data.message || 'Could not join course.');
+      await joinCourse(courseId);
+      if (onJoin) {
+        onJoin(courseId);
       }
+      setCourseId(''); // Clear input on success
     } catch (err) {
-      setError('Invalid course ID or server error.');
+      const errorMessage = err.response?.data?.message || 'Invalid course ID or server error.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -27,17 +30,23 @@ const JoinCourseForm = ({ onJoin }) => {
 
   return (
     <form onSubmit={handleSubmit} className="join-course-form">
-      <label htmlFor="courseId">Enter Course ID:</label>
-      <input
-        type="text"
-        id="courseId"
-        value={courseId}
-        onChange={e => setCourseId(e.target.value)}
-        maxLength={7}
-        required
-      />
-      <button type="submit" disabled={loading}>Join Course</button>
-      {error && <div className="error">{error}</div>}
+      <div>
+        <label htmlFor="courseId">Course Code</label>
+        <input
+          id="courseId"
+          name="courseId"
+          type="text"
+          value={courseId}
+          onChange={(e) => setCourseId(e.target.value)}
+          placeholder="Enter 7-character course code"
+          required
+          maxLength="7"
+        />
+      </div>
+      <button type="submit" disabled={loading}>
+        {loading ? 'Joining...' : 'Join Course'}
+      </button>
+      {error && <p style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}
     </form>
   );
 };

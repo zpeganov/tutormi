@@ -1,8 +1,7 @@
-
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
-import { getMyCourses } from '../services/api';
-import { NewCourseCard } from '../components';
+import { getMyCourses, joinCourse } from '../services/api';
+import { NewCourseCard, JoinCourseForm } from '../components';
 
 function DashboardHome() {
   const navigate = useNavigate();
@@ -10,18 +9,37 @@ function DashboardHome() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false); // for future use
-  const [selectedCourse, setSelectedCourse] = useState(null); // for future use
   const joinSectionRef = useRef(null);
 
   useEffect(() => {
     if (userType !== 'student') return;
+    let isMounted = true;
     setLoading(true);
     getMyCourses()
-      .then((res) => setCourses(res.courses || []))
-      .catch((err) => setError('Failed to load courses'))
-      .finally(() => setLoading(false));
+      .then((res) => {
+        if (isMounted) setCourses(res.courses || []);
+      })
+      .catch(() => {
+        if (isMounted) setError('Failed to load courses');
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+    return () => { isMounted = false; };
   }, [userType]);
+
+  const handleJoinCourse = async (courseCode) => {
+    try {
+      await joinCourse(courseCode);
+      // Refetch courses after joining
+      setLoading(true);
+      const res = await getMyCourses();
+      setCourses(res.courses || []);
+      setLoading(false);
+    } catch (err) {
+      setError('Failed to join course.');
+    }
+  };
 
   const handleScrollToJoin = () => {
     if (joinSectionRef.current) {
@@ -86,17 +104,7 @@ function DashboardHome() {
       {userType === 'student' && (
         <section ref={joinSectionRef} id="join-course-section" style={{ marginTop: 48, padding: 32, background: '#f9fafb', borderRadius: 12 }}>
           <h2 style={{ marginBottom: 16 }}>Join a Course</h2>
-          <form className="join-course-form">
-            <div>
-              <label htmlFor="tutorId">Tutor ID</label>
-              <input id="tutorId" name="tutorId" type="text" placeholder="Enter Tutor ID (e.g. TUT001)" required />
-            </div>
-            <div>
-              <label htmlFor="courseCode">Course Code</label>
-              <input id="courseCode" name="courseCode" type="text" placeholder="Enter Course Code (e.g. ALG101)" required />
-            </div>
-            <button type="submit">Join Course</button>
-          </form>
+          <JoinCourseForm onJoin={handleJoinCourse} />
         </section>
       )}
     </main>

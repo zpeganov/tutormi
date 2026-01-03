@@ -4,3 +4,4 @@ export { default as NewCourseCard } from './NewCourseCard';
 export { default as LessonCard } from './LessonCard';
 export { default as Profile } from './Profile';
 export { default as AnnouncementCard } from './AnnouncementCard';
+export { default as JoinCourseForm } from './JoinCourseForm';

@@ -1,4 +1,3 @@
-
 const express = require('express');
 const db = require('../db');
 const { authenticateToken, requireTutor } = require('../middleware/auth');
@@ -249,6 +248,60 @@ router.get('/students', authenticateToken, requireTutor, async (req, res) => {
   } catch (error) {
     console.error('Get students error:', error);
     res.status(500).json({ error: 'Failed to get students' });
+  }
+});
+
+// Get all pending enrollment requests for the tutor's courses
+router.get('/me/requests', authenticateToken, requireTutor, async (req, res) => {
+  try {
+    const result = await db.query(
+      `SELECT sce.id, s.first_name, s.last_name, s.email, c.name as course_name, sce.status
+       FROM student_course_enrollments sce
+       JOIN students s ON sce.student_id = s.id
+       JOIN courses c ON sce.course_id = c.id
+       WHERE c.tutor_id = ? AND sce.status = 'pending'`,
+      [req.user.id]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Get requests error:', error);
+    res.status(500).json({ error: 'Failed to get enrollment requests' });
+  }
+});
+
+// Approve or decline an enrollment request
+router.put('/me/requests/:requestId', authenticateToken, requireTutor, async (req, res) => {
+  const { requestId } = req.params;
+  const { status } = req.body; // 'approved' or 'declined'
+
+  if (!['approved', 'declined'].includes(status)) {
+    return res.status(400).json({ error: 'Invalid status. Must be "approved" or "declined".' });
+  }
+
+  try {
+    // Verify the request belongs to a course taught by this tutor
+    const requestCheck = await db.query(
+      `SELECT sce.id
+       FROM student_course_enrollments sce
+       JOIN courses c ON sce.course_id = c.id
+       WHERE sce.id = ? AND c.tutor_id = ?`,
+      [requestId, req.user.id]
+    );
+
+    if (requestCheck.rows.length === 0) {
+      return res.status(404).json({ error: 'Request not found or you do not have permission to modify it.' });
+    }
+
+    // Update the status
+    await db.query(
+      'UPDATE student_course_enrollments SET status = ? WHERE id = ?',
+      [status, requestId]
+    );
+
+    res.json({ success: true, message: `Request has been ${status}.` });
+  } catch (error) {
+    console.error('Update request error:', error);
+    res.status(500).json({ error: 'Failed to update enrollment request' });
   }
 });
 

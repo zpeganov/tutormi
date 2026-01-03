@@ -193,3 +193,5 @@ export const deleteCourse = async (courseId) => {
     method: 'DELETE',
   });
 };
+
+export const joinCourse = (courseCode) => authFetch('/courses/join', { method: 'POST', body: JSON.stringify({ courseCode }) });

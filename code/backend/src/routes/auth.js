@@ -108,7 +108,6 @@ router.post('/register/student', [
   body('password').isLength({ min: 6 }),
   body('firstName').trim().notEmpty(),
   body('lastName').trim().notEmpty(),
-  body('courseId').isLength({ min: 7, max: 7 }).withMessage('Course ID must be 7 characters.')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -116,7 +115,7 @@ router.post('/register/student', [
       return res.status(400).json({ errors: errors.array() });
     }
 
-  const { email, password, firstName, lastName, gradeLevel, courseId } = req.body;
+    const { email, password, firstName, lastName, gradeLevel } = req.body;
 
     // Check if email already exists
     const existingUser = await db.query(
@@ -128,42 +127,34 @@ router.post('/register/student', [
       return res.status(400).json({ error: 'Email already registered' });
     }
 
-    // Find course by 7-character course ID
-    const courseResult = await db.query(
-      'SELECT id, tutor_id FROM courses WHERE id = ?',
-      [courseId.toUpperCase()]
-    );
-
-    if (courseResult.rows.length === 0) {
-      return res.status(400).json({ error: 'Invalid Course ID. Please check and try again.' });
-    }
-
-    const course = courseResult.rows[0];
-
     // Hash password
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Create student with pending status
+    // Create student - no course or tutor link at registration
     const id = uuidv4();
     await db.query(
-      `INSERT INTO students (id, email, password_hash, first_name, last_name, grade_level, tutor_id, course_id, status)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')`,
-      [id, email, passwordHash, firstName, lastName, gradeLevel || null, course.tutor_id, course.id]
+      `INSERT INTO students (id, email, password_hash, first_name, last_name, grade_level, status)
+       VALUES (?, ?, ?, ?, ?, ?, 'approved')`, // Students are approved by default now
+      [id, email, passwordHash, firstName, lastName, gradeLevel || null]
+    );
+
+    // Generate JWT for immediate login
+    const token = jwt.sign(
+      { id, email, userType: 'student' },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
     );
 
     res.status(201).json({
-      message: 'Registration request submitted! Waiting for tutor approval.',
+      message: 'Student registered successfully!',
+      token,
       user: {
         id,
         email,
         firstName,
         lastName,
         gradeLevel: gradeLevel || null,
-        status: 'pending',
-        tutor: {
-          firstName: tutor.first_name,
-          lastName: tutor.last_name
-        },
+        status: 'approved',
         userType: 'student'
       }
     });
@@ -254,12 +245,9 @@ router.post('/login/student', [
 
     const { email, password } = req.body;
 
-    // Find student with tutor info
+    // Find student by email. No longer joining with tutors table.
     const result = await db.query(
-      `SELECT s.*, t.first_name as tutor_first_name, t.last_name as tutor_last_name
-       FROM students s
-       LEFT JOIN tutors t ON s.tutor_id = t.id
-       WHERE s.email = ?`,
+      `SELECT * FROM students WHERE email = ?`,
       [email]
     );
 
@@ -275,24 +263,12 @@ router.post('/login/student', [
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    // Check if student is approved
-    if (student.status === 'pending') {
-      return res.status(403).json({ 
-        error: 'Your registration is pending approval from your tutor.',
-        status: 'pending'
-      });
-    }
-
-    if (student.status === 'declined') {
-      return res.status(403).json({ 
-        error: 'Your registration request was declined.',
-        status: 'declined'
-      });
-    }
+    // The concept of a student's status is now tied to course enrollment,
+    // not the student record itself. So we remove the status checks here.
 
     // Generate JWT
     const token = jwt.sign(
-      { id: student.id, email: student.email, userType: 'student', tutorId: student.tutor_id },
+      { id: student.id, email: student.email, userType: 'student' },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
@@ -306,17 +282,13 @@ router.post('/login/student', [
         firstName: student.first_name,
         lastName: student.last_name,
         gradeLevel: student.grade_level,
-        status: student.status,
-        tutor: {
-          firstName: student.tutor_first_name,
-          lastName: student.tutor_last_name
-        },
+        // No longer returning tutor or status info at the top level
         userType: 'student'
       }
     });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ error: 'Login failed' });
+    res.status(500).json({ error: 'Login failed', details: error.message });
   }
 });
 

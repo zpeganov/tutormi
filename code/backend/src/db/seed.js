@@ -35,7 +35,7 @@ const seedDatabase = async () => {
   await conn.query('TRUNCATE TABLE tutors');
   await conn.query('TRUNCATE TABLE lessons');
   await conn.query('TRUNCATE TABLE announcements');
-  await conn.query('TRUNCATE TABLE student_requests');
+  await conn.query('TRUNCATE TABLE student_course_enrollments');
   await conn.query('SET FOREIGN_KEY_CHECKS = 1');
 
   try {
@@ -83,19 +83,19 @@ const seedDatabase = async () => {
     const student3Code = generateSimpleId('STU');
 
     await conn.execute(`
-      INSERT INTO students (id, student_id, email, password_hash, first_name, last_name, grade_level, tutor_id, course_id, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `, [student1Id, student1Code, 'alex@student.com', studentPassword, 'Alex', 'Thompson', '10th Grade', tutor1Code, course1Id, 'approved']);
+      INSERT INTO students (id, student_id, email, password_hash, first_name, last_name, grade_level)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+  `, [student1Id, student1Code, 'alex@student.com', studentPassword, 'Alex', 'Thompson', '10th Grade']);
 
     await conn.execute(`
-      INSERT INTO students (id, student_id, email, password_hash, first_name, last_name, grade_level, tutor_id, course_id, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `, [student2Id, student2Code, 'emma@student.com', studentPassword, 'Emma', 'Wilson', '11th Grade', tutor1Code, course2Id, 'approved']);
+      INSERT INTO students (id, student_id, email, password_hash, first_name, last_name, grade_level)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+  `, [student2Id, student2Code, 'emma@student.com', studentPassword, 'Emma', 'Wilson', '11th Grade']);
 
     await conn.execute(`
-      INSERT INTO students (id, student_id, email, password_hash, first_name, last_name, grade_level, tutor_id, course_id, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `, [student3Id, student3Code, 'pending@student.com', studentPassword, 'James', 'Brown', '9th Grade', tutor1Code, course1Id, 'pending']);
+      INSERT INTO students (id, student_id, email, password_hash, first_name, last_name, grade_level)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+  `, [student3Id, student3Code, 'pending@student.com', studentPassword, 'James', 'Brown', '9th Grade']);
 
     // Create sample lessons
     await conn.execute(`
@@ -118,6 +118,14 @@ const seedDatabase = async () => {
       INSERT IGNORE INTO announcements (id, tutor_id, title, content, priority)
       VALUES (?, ?, ?, ?, ?)
     `, [uuidv4(), tutor1Id, 'Office Hours Update', 'Office hours will be held on Zoom this week.', 'high']);
+
+    // Seed Student Course Enrollments
+    await conn.query(`
+      INSERT INTO student_course_enrollments (student_id, course_id, status) VALUES
+      ('${student1Id}', '${course1Id}', 'approved'),
+      ('${student2Id}', '${course2Id}', 'pending'),
+      ('${student3Id}', '${course1Id}', 'approved');
+    `);
 
     await conn.commit();
     

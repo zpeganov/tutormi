@@ -1,4 +1,3 @@
-
 const express = require('express');
 const db = require('../db');
 const { authenticateToken, requireStudent } = require('../middleware/auth');
@@ -11,9 +10,9 @@ router.get('/me/courses', authenticateToken, requireStudent, async (req, res) =>
     const result = await db.query(
       `SELECT c.*, t.first_name AS tutor_first_name, t.last_name AS tutor_last_name, t.email AS tutor_email
        FROM courses c
-       JOIN students s ON c.id = s.course_id
+       JOIN student_course_enrollments sce ON c.id = sce.course_id
        JOIN tutors t ON c.tutor_id = t.id
-       WHERE s.id = ? AND s.status = 'approved'`,
+       WHERE sce.student_id = ? AND sce.status = 'approved'`,
       [req.user.id]
     );
     // Map tutor info into course object

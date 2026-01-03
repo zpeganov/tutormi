@@ -4,40 +4,33 @@ services:
   db:
     image: mysql:8.0
     container_name: tutormi-db-dev
-    restart: unless-stopped
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: tutormi_password
-      MYSQL_DATABASE: tutormi
-    volumes:
-      - mysql_data_dev:/var/lib/mysql
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
     ports:
       - "3307:3306"
+    volumes:
+      - tutormi-db-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-ptutormi_password"]
-      interval: 5s
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD}"]
+      interval: 10s
       timeout: 5s
-      retries: 10
-    command: --default-authentication-plugin=mysql_native_password
+      retries: 5
+      start_period: 30s
 
   # Backend API (with nodemon for hot reload)
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
+    env_file:
+      - .env
     container_name: tutormi-backend-dev
     restart: unless-stopped
     environment:
-      NODE_ENV: development
-      PORT: 8000
-      DB_HOST: db
-      DB_PORT: 3306
-      DB_NAME: tutormi
-      DB_USER: root
-      DB_PASSWORD: tutormi_password
-      JWT_SECRET: tutormi-dev-secret-change-in-production
-      JWT_EXPIRES_IN: 7d
-    volumes:
-      - ./backend/src:/app/src
+      - NODE_ENV=development
+      - DB_HOST=db
     ports:
       - "8000:8000"
     depends_on:
@@ -58,4 +51,4 @@ services:
       - backend
 
 volumes:
-  mysql_data_dev:
+  tutormi-db-data:

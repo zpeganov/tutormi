@@ -95,17 +95,13 @@
 
 /* Tagline */
 .tagline {
-  font-family: 'Coolvetica', sans-serif;
-  font-weight: normal;
+  font-family: 'Coolvetica', 'Coolvetica Rg', Arial, sans-serif;
+  font-size: 3.0rem;
+  text-align: left;
+  margin-bottom: 2rem;
   color: white;
-  font-size: 42px;
-  line-height: 1.25;
-  margin-bottom: 40px;
-  /* make the tagline block the same width as both cards combined */
-  width: calc((var(--card-image-width) + var(--vertical-width)) * 2 + var(--card-gap));
-  max-width: 100%;
-  text-align: center;
-  animation: fadeInUp 0.8s ease-out 0.2s both;
+  line-height: 1.2;
+  width: 100%;
 }
 
 .tagline .tutormi {

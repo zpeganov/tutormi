@@ -73,16 +73,26 @@ const createTables = async () => {
         first_name VARCHAR(255) NOT NULL,
         last_name VARCHAR(255) NOT NULL,
         grade_level VARCHAR(50),
-  tutor_id VARCHAR(36),
-  course_id VARCHAR(7),
-        status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
         UNIQUE KEY (email),
-        UNIQUE KEY (student_id),
-        FOREIGN KEY (tutor_id) REFERENCES tutors(tutor_id) ON DELETE SET NULL,
-        FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE SET NULL
+        UNIQUE KEY (student_id)
+      )
+    `);
+
+    // Create Student Course Enrollments Table
+    await conn.execute(`
+      CREATE TABLE IF NOT EXISTS student_course_enrollments (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        student_id VARCHAR(36) NOT NULL,
+        course_id VARCHAR(7) NOT NULL,
+        status ENUM('pending', 'approved', 'declined') NOT NULL DEFAULT 'pending',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+        FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+        UNIQUE KEY unique_enrollment (student_id, course_id)
       )
     `);
 

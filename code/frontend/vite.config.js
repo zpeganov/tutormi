@@ -8,7 +8,7 @@ export default defineConfig({
     host: true, // needed for docker
     proxy: {
       '/api': {
-        target: 'http://backend:8000',
+        target: 'http://host.docker.internal:8000',
         changeOrigin: true,
       },
     },
